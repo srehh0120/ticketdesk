@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ticket Desk — New Ticket</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#111110;
+  --ink2:#52524E;
+  --ink3:#A8A8A2;
+  --rule:#E8E8E4;
+  --bg:#F9F9F7;
+  --white:#FFFFFF;
+  --blue:#2563EB;
+  --blue-bg:#EFF6FF;
+  --p1:#DC2626;--p1b:#FEF2F2;--p1r:#FECACA;
+  --p2:#CA8A04;--p2b:#FEFCE8;--p2r:#FDE68A;
+  --p3:#16A34A;--p3b:#F0FDF4;--p3r:#BBF7D0;
+  --radius:8px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+
+/* ── NAV ── */
+.nav{background:var(--white);border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;position:sticky;top:0;z-index:50;}
+.nav-brand{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--ink);letter-spacing:-.01em;text-decoration:none;}
+.nav-brand em{color:var(--ink3);font-style:normal;}
+.nav-links{display:flex;gap:4px;}
+.nav-a{padding:5px 12px;border-radius:6px;font-size:13px;color:var(--ink2);text-decoration:none;transition:background .12s,color .12s;}
+.nav-a:hover{background:var(--bg);color:var(--ink);}
+.nav-a.on{background:var(--bg);color:var(--ink);font-weight:500;}
+
+/* ── LAYOUT ── */
+.shell{max-width:600px;margin:0 auto;padding:48px 24px 80px;}
+
+/* ── PAGE HEADER ── */
+.ph{margin-bottom:28px;}
+.ph-title{font-size:20px;font-weight:600;letter-spacing:-.025em;margin-bottom:4px;}
+.ph-sub{font-size:13px;color:var(--ink2);}
+
+/* ── FORM CARD ── */
+.card{background:var(--white);border:1px solid var(--rule);border-radius:12px;overflow:hidden;}
+
+.field-wrap{padding:20px 20px 0;}
+.field-label{display:block;font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.field-hint{font-size:12px;color:var(--ink3);margin-bottom:8px;}
+textarea.field{
+  width:100%;min-height:140px;resize:vertical;
+  border:1px solid var(--rule);border-radius:var(--radius);
+  padding:12px 14px;font-family:'Inter',sans-serif;font-size:14px;
+  line-height:1.6;color:var(--ink);background:var(--bg);
+  outline:none;transition:border-color .15s,box-shadow .15s;
+}
+textarea.field:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+textarea.field::placeholder{color:var(--ink3);}
+
+/* ── QUICK FILLS ── */
+.qf-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.qf{padding:4px 10px;border-radius:20px;font-size:12px;color:var(--ink2);background:var(--bg);border:1px solid var(--rule);cursor:pointer;transition:border-color .12s,color .12s;}
+.qf:hover{border-color:var(--ink3);color:var(--ink);}
+
+/* ── FORM FOOTER ── */
+.form-foot{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-top:1px solid var(--rule);margin-top:16px;}
+.form-foot-hint{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:6px;}
+.dot-pulse{width:7px;height:7px;border-radius:50%;background:#16A34A;display:inline-block;animation:pulse 2.2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+.btn-submit{display:inline-flex;align-items:center;gap:7px;background:var(--ink);color:#fff;border:none;border-radius:var(--radius);padding:9px 18px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:opacity .15s;}
+.btn-submit:hover{opacity:.8;}
+.btn-submit svg{flex-shrink:0;}
+
+/* ── WHAT AI DOES ── */
+.ai-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid var(--rule);}
+.ai-cell{padding:16px 20px;}
+.ai-cell+.ai-cell{border-left:1px solid var(--rule);}
+.ai-cell-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:5px;}
+.ai-cell-val{font-size:12px;color:var(--ink2);line-height:1.5;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-brand">ticket<em>desk</em></a>
+  <div class="nav-links">
+    <a href="/" class="nav-a on">New ticket</a>
+    <a href="/dashboard" class="nav-a">Dashboard</a>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="ph">
+    <h1 class="ph-title">Submit a ticket</h1>
+    <p class="ph-sub">Describe the issue in plain language. AI handles the rest.</p>
+  </div>
+
+  <div class="card">
+    <form action="/analyze" method="POST">
+      <div class="field-wrap">
+        <label class="field-label" for="ticket">Describe the issue</label>
+        <p class="field-hint">Include what happened, when it started, and who's affected.</p>
+        <textarea class="field" name="ticket" id="ticket" required
+          placeholder="e.g. The checkout page crashes for all users on mobile Safari since the 2pm deploy. About 300 users affected. No error on desktop."></textarea>
+        <div class="qf-row">
+          <span class="qf" onclick="fill('Login page throws 500 on SSO sign-in with Safari. Started after yesterday\'s update.')">Login broken</span>
+          <span class="qf" onclick="fill('Invoice shows wrong charge — billed $240 instead of $120 for last month.')">Wrong billing</span>
+          <span class="qf" onclick="fill('Dashboard takes 40+ seconds to load for all users since this morning.')">Slow dashboard</span>
+          <span class="qf" onclick="fill('Need CSV export with custom date range on the Reports page.')">Feature request</span>
+          <span class="qf" onclick="fill('Possible XSS in the comments field — unescaped HTML renders in the UI.')">Security issue</span>
+        </div>
+      </div>
+
+      <div class="form-foot">
+        <span class="form-foot-hint">
+        <button type="submit" class="btn-submit">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M5 7l2 2 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Analyze &amp; submit
+        </button>
+      </div>
+    </form>
+
+    <div class="ai-row">
+      <div class="ai-cell">
+        <div class="ai-cell-label">Summary</div>
+        <div class="ai-cell-val">One-line description generated automatically</div>
+      </div>
+      <div class="ai-cell">
+        <div class="ai-cell-label">Impact · Urgency · Priority</div>
+        <div class="ai-cell-val">Scored P1–P3 based on scope and severity</div>
+      </div>
+      <div class="ai-cell">
+        <div class="ai-cell-label">Team routing</div>
+        <div class="ai-cell-val">Sent to the right team instantly</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function fill(text){
+  document.getElementById('ticket').value=text;
+  document.getElementById('ticket').focus();
+}
+</script>
+</body>
+</html>

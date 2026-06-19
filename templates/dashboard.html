@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Ticket Desk</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#111110;--ink2:#52524E;--ink3:#A8A8A2;
+  --rule:#E8E8E4;--bg:#F9F9F7;--white:#FFFFFF;
+  --p1:#DC2626;--p1b:#FEF2F2;--p1r:#FECACA;
+  --p2:#CA8A04;--p2b:#FEFCE8;--p2r:#FDE68A;
+  --p3:#16A34A;--p3b:#F0FDF4;--p3r:#BBF7D0;
+  --radius:8px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+
+.nav{background:var(--white);border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;position:sticky;top:0;z-index:50;}
+.nav-brand{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--ink);letter-spacing:-.01em;text-decoration:none;}
+.nav-brand em{color:var(--ink3);font-style:normal;}
+.nav-links{display:flex;gap:4px;align-items:center;}
+.nav-a{padding:5px 12px;border-radius:6px;font-size:13px;color:var(--ink2);text-decoration:none;transition:background .12s,color .12s;}
+.nav-a:hover{background:var(--bg);color:var(--ink);}
+.nav-a.on{background:var(--bg);color:var(--ink);font-weight:500;}
+.btn-new{background:var(--ink);color:#fff;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;text-decoration:none;transition:opacity .15s;}
+.btn-new:hover{opacity:.8;}
+
+.shell{max-width:980px;margin:0 auto;padding:40px 24px 80px;}
+
+/* ── PAGE HEAD ── */
+.ph{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:28px;}
+.ph-title{font-size:20px;font-weight:600;letter-spacing:-.025em;}
+.ph-count{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink3);}
+
+
+/* ── STATS ── */
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:10px;
+margin-bottom:20px;
+}
+.stat{background:var(--white);border:1px solid var(--rule);border-radius:10px;padding:16px 18px;}
+.stat-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:8px;}
+.stat-value{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:500;color:var(--ink);line-height:1;}
+.stat-value.red{color:var(--p1);}
+
+/* ── TABLE CARD ── */
+.tcard{background:var(--white);border:1px solid var(--rule);border-radius:12px;overflow:hidden;}
+.tcard-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--rule);}
+.tcard-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);}
+
+/* filter tabs */
+.filter-tabs{display:flex;gap:2px;}
+.ftab{padding:4px 10px;border-radius:5px;font-size:12px;color:var(--ink3);cursor:pointer;transition:background .12s,color .12s;border:none;background:transparent;font-family:'Inter',sans-serif;}
+.ftab:hover{background:var(--bg);color:var(--ink2);}
+.ftab.active{background:var(--bg);color:var(--ink);font-weight:500;}
+
+table{width:100%;border-collapse:collapse;}
+th{padding:9px 14px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);text-align:left;background:#FAFAF8;border-bottom:1px solid var(--rule);white-space:nowrap;}
+td{padding:11px 14px;font-size:13px;color:var(--ink);border-top:1px solid var(--rule);vertical-align:middle;}
+tr.data-row:first-child td{border-top:none;}
+tr.data-row{cursor:pointer;transition:background .1s;}
+tr.data-row:hover td{background:#FAFAF8;}
+
+.td-id{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink3);white-space:nowrap;}
+.td-text{max-width:200px;}
+.td-text-inner{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink2);font-size:12px;}
+.td-summary{max-width:240px;}
+.td-summary-inner{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.td-team{white-space:nowrap;color:var(--ink2);font-size:12px;}
+.td-date{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink3);white-space:nowrap;}
+
+.badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;border:1px solid;white-space:nowrap;}
+.b-p1{background:var(--p1b);color:var(--p1);border-color:var(--p1r);}
+.b-p2{background:var(--p2b);color:var(--p2);border-color:var(--p2r);}
+.b-p3{background:var(--p3b);color:var(--p3);border-color:var(--p3r);}
+.b-cat{background:var(--bg);color:var(--ink2);border-color:var(--rule);font-family:'Inter',sans-serif;font-size:11px;}
+.b-high{background:#FEF2F2;color:#B91C1C;border-color:#FECACA;}
+.b-medium{background:#FEFCE8;color:#92400E;border-color:#FDE68A;}
+.b-low{background:#F0FDF4;color:#166534;border-color:#BBF7D0;}
+
+.empty{padding:56px 24px;text-align:center;}
+.empty-msg{font-size:14px;color:var(--ink3);margin-bottom:12px;}
+.empty-link{font-size:13px;color:var(--ink);font-weight:500;text-decoration:none;border-bottom:1px solid var(--rule);}
+.empty-link:hover{border-color:var(--ink2);}
+
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr;}.td-text,.td-team{display:none;}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-brand">ticket<em>desk</em></a>
+  <div class="nav-links">
+    <a href="/" class="nav-a">New ticket</a>
+    <a href="/dashboard" class="nav-a on">Dashboard</a>
+    <a href="/" class="btn-new">+ New</a>
+  </div>
+</nav>
+
+<div class="shell">
+
+  <div class="ph">
+    <h1 class="ph-title">Dashboard</h1>
+    <span class="ph-count">{{ tickets|length }} ticket{{ 's' if tickets|length != 1 else '' }}</span>
+  </div>
+
+  {# ── Jinja2 stat computation ── #}
+  {% set total = tickets|length %}
+  {% set ns = namespace(p1=0,p2=0,p3=0) %}
+  {% set total = tickets|length %}
+{% set ns = namespace(p1=0,p2=0,p3=0,p4=0) %}
+
+{% for t in tickets %}
+
+    {% if t[6] == 'P1' %}
+        {% set ns.p1 = ns.p1 + 1 %}
+
+    {% elif t[6] == 'P2' %}
+        {% set ns.p2 = ns.p2 + 1 %}
+
+    {% elif t[6] == 'P3' %}
+        {% set ns.p3 = ns.p3 + 1 %}
+
+    {% else %}
+        {% set ns.p4 = ns.p4 + 1 %}
+
+    {% endif %}
+
+{% endfor %}
+  {# tuple: (id, ticket_text, summary, category, impact, urgency, priority, team, created_at) #}
+
+<div class="stats">
+
+    <div class="stat">
+        <div class="stat-label">Total</div>
+        <div class="stat-value">{{ total }}</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-label">P1 Critical</div>
+        <div class="stat-value red">
+            {{ ns.p1 }}
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-label">P2 High</div>
+        <div class="stat-value" style="color:var(--p2)">
+            {{ ns.p2 }}
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-label">P3 Medium</div>
+        <div class="stat-value" style="color:var(--p3)">
+            {{ ns.p3 }}
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-label">P4 Low</div>
+        <div class="stat-value" style="color:var(--ink3)">
+            {{ ns.p4 }}
+        </div>
+    </div>
+
+</div>
+
+  <div class="tcard">
+    <div class="tcard-head">
+      <span class="tcard-label">All tickets</span>
+      <div class="filter-tabs">
+        <button class="ftab active" onclick="filterAll(this)">All</button>
+        <button class="ftab" onclick="filterBy('P1',this)">P1</button>
+        <button class="ftab" onclick="filterBy('P2',this)">P2</button>
+        <button class="ftab" onclick="filterBy('P3',this)">P3</button>
+      </div>
+    </div>
+
+    {% if tickets %}
+    <div style="overflow-x:auto;">
+      <table id="tickets-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Ticket</th>
+            <th>Summary</th>
+            <th>Category</th>
+            <th>Impact</th>
+            <th>Urgency</th>
+            <th>Priority</th>
+            <th>Team</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {# tuple: (id, ticket_text, summary, category, impact, urgency, priority, team, created_at) #}
+          {% for t in tickets %}
+          <tr class="data-row" data-priority="{{ t[6] }}" onclick="window.location='/ticket/{{ t[0] }}'">
+            <td class="td-id">#{{ t[0] }}</td>
+            <td class="td-text"><div class="td-text-inner" title="{{ t[1] }}">{{ t[1] }}</div></td>
+            <td class="td-summary"><div class="td-summary-inner" title="{{ t[2] }}">{{ t[2] }}</div></td>
+            <td><span class="badge b-cat">{{ t[3] }}</span></td>
+            <td>
+              {% set imp = t[4]|lower %}
+              {% if imp == 'high' %}<span class="badge b-high">High</span>
+              {% elif imp == 'medium' %}<span class="badge b-medium">Medium</span>
+              {% else %}<span class="badge b-low">Low</span>{% endif %}
+            </td>
+            <td>
+              {% set urg = t[5]|lower %}
+              {% if urg == 'high' %}<span class="badge b-high">High</span>
+              {% elif urg == 'medium' %}<span class="badge b-medium">Medium</span>
+              {% else %}<span class="badge b-low">Low</span>{% endif %}
+            </td>
+            <td>
+
+                {% if t[6] == 'P1' %}
+                    <span class="badge b-p1">P1</span>
+
+                {% elif t[6] == 'P2' %}
+                    <span class="badge b-p2">P2</span>
+
+                {% elif t[6] == 'P3' %}
+                    <span class="badge b-p3">P3</span>
+
+                {% else %}
+                    <span class="badge b-cat">P4</span>
+
+                {% endif %}
+
+                </td>
+            <td class="td-team">{{ t[7] }}</td>
+            <td class="td-date">{% if t[8] %}{{ t[8].strftime('%b %d') }}{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty">
+      <p class="empty-msg">No tickets yet.</p>
+      <a href="/" class="empty-link">Submit your first ticket →</a>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+function filterBy(pri, btn) {
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.data-row').forEach(r => {
+    r.style.display = r.dataset.priority === pri ? '' : 'none';
+  });
+}
+function filterAll(btn) {
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.data-row').forEach(r => r.style.display = '');
+}
+</script>
+
+</body>
+</html>

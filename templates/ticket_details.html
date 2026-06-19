@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ticket #{{ ticket[0] }} — Ticket Desk</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#111110;--ink2:#52524E;--ink3:#A8A8A2;
+  --rule:#E8E8E4;--bg:#F9F9F7;--white:#FFFFFF;
+  --p1:#DC2626;--p1b:#FEF2F2;--p1r:#FECACA;
+  --p2:#CA8A04;--p2b:#FEFCE8;--p2r:#FDE68A;
+  --p3:#16A34A;--p3b:#F0FDF4;--p3r:#BBF7D0;
+  --radius:8px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+
+.nav{background:var(--white);border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;position:sticky;top:0;z-index:50;}
+.nav-brand{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--ink);letter-spacing:-.01em;text-decoration:none;}
+.nav-brand em{color:var(--ink3);font-style:normal;}
+.nav-links{display:flex;gap:4px;}
+.nav-a{padding:5px 12px;border-radius:6px;font-size:13px;color:var(--ink2);text-decoration:none;transition:background .12s,color .12s;}
+.nav-a:hover{background:var(--bg);color:var(--ink);}
+
+.shell{max-width:660px;margin:0 auto;padding:40px 24px 80px;}
+
+/* ── BREADCRUMB ── */
+.bc{display:flex;align-items:center;gap:6px;margin-bottom:24px;font-size:12px;color:var(--ink3);}
+.bc a{color:var(--ink3);text-decoration:none;transition:color .12s;}
+.bc a:hover{color:var(--ink2);}
+.bc-sep{color:var(--rule);}
+.bc-cur{color:var(--ink2);}
+
+/* ── HEADER ── */
+.ticket-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:24px;}
+.ticket-id-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.ticket-id{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink3);}
+.ticket-title{font-size:19px;font-weight:600;letter-spacing:-.022em;line-height:1.35;}
+
+/* priority sidebar pill */
+.pri-pill{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+
+/* ── CARDS ── */
+.card{background:var(--white);border:1px solid var(--rule);border-radius:12px;overflow:hidden;margin-bottom:12px;}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--rule);background:#FAFAF8;}
+.card-head-label{font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;}
+.card-head-right{font-size:11px;color:var(--ink3);}
+.card-body{padding:16px;}
+
+.ticket-body{font-size:14px;color:var(--ink2);line-height:1.75;font-style:italic;}
+.summary-body{font-size:15px;font-weight:500;color:var(--ink);line-height:1.5;letter-spacing:-.012em;}
+
+/* ── DETAIL GRID: 3 col top row, 3 col bottom row ── */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr 1fr;}
+.detail-cell{padding:14px 16px;}
+.detail-cell+.detail-cell{border-left:1px solid var(--rule);}
+.detail-row-2{border-top:1px solid var(--rule);}
+.detail-key{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:6px;}
+.detail-val{font-size:13px;font-weight:500;color:var(--ink);}
+
+/* ── BADGES ── */
+.badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;border:1px solid;}
+.b-p1{background:var(--p1b);color:var(--p1);border-color:var(--p1r);}
+.b-p2{background:var(--p2b);color:var(--p2);border-color:var(--p2r);}
+.b-p3{background:var(--p3b);color:var(--p3);border-color:var(--p3r);}
+.b-high{background:#FEF2F2;color:#B91C1C;border-color:#FECACA;}
+.b-medium{background:#FEFCE8;color:#92400E;border-color:#FDE68A;}
+.b-low{background:#F0FDF4;color:#166534;border-color:#BBF7D0;}
+.b-cat{background:var(--bg);color:var(--ink2);border-color:var(--rule);font-family:'Inter',sans-serif;}
+
+/* ── META BAR (timestamp + team) ── */
+.meta-bar{display:flex;align-items:center;gap:16px;padding:10px 16px;border-top:1px solid var(--rule);background:#FAFAF8;}
+.meta-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);}
+.meta-item strong{color:var(--ink2);font-weight:500;}
+
+/* ── ACTIONS ── */
+.actions{display:flex;gap:8px;margin-top:20px;}
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:var(--radius);padding:9px 16px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:opacity .15s,border-color .15s;}
+.btn-dark{background:var(--ink);color:#fff;border:1px solid var(--ink);}
+.btn-dark:hover{opacity:.8;}
+.btn-ghost{background:var(--white);color:var(--ink2);border:1px solid var(--rule);}
+.btn-ghost:hover{border-color:var(--ink3);color:var(--ink);}
+
+/* 404 state */
+.not-found{text-align:center;padding:80px 24px;}
+.not-found-title{font-size:18px;font-weight:600;margin-bottom:8px;}
+.not-found-sub{font-size:14px;color:var(--ink3);margin-bottom:20px;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-brand">ticket<em>desk</em></a>
+  <div class="nav-links">
+    <a href="/" class="nav-a">New ticket</a>
+    <a href="/dashboard" class="nav-a">Dashboard</a>
+  </div>
+</nav>
+
+<div class="shell">
+
+{% if ticket %}
+
+  {# tuple: (id, ticket_text, summary, category, impact, urgency, priority, team, created_at) #}
+
+  <div class="bc">
+    <a href="/dashboard">Dashboard</a>
+    <span class="bc-sep">/</span>
+    <span class="bc-cur">Ticket #{{ ticket[0] }}</span>
+  </div>
+
+  <div class="ticket-header">
+    <div style="flex:1;min-width:0;">
+      <div class="ticket-id-row">
+        <span class="ticket-id">#{{ ticket[0] }}</span>
+        <span class="badge b-cat">{{ ticket[3] }}</span>
+      </div>
+      <h1 class="ticket-title">{{ ticket[2] }}</h1>
+    </div>
+    <div class="pri-pill">
+      {% if ticket[6] == 'P1' %}<span class="badge b-p1">P1 Critical</span>
+      {% elif ticket[6] == 'P2' %}<span class="badge b-p2">P2 Medium</span>
+      {% else %}<span class="badge b-p3">P3 Low</span>{% endif %}
+    </div>
+  </div>
+
+  <!-- Original message -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-head-label">Original message</span>
+    </div>
+    <div class="card-body">
+      <p class="ticket-body">{{ ticket[1] }}</p>
+    </div>
+  </div>
+
+  <!-- AI summary -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-head-label">AI summary</span>
+      <span class="card-head-right">Claude</span>
+    </div>
+    <div class="card-body">
+      <p class="summary-body">{{ ticket[2] }}</p>
+    </div>
+  </div>
+
+  <!-- Full classification -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-head-label">Classification</span>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-cell">
+        <div class="detail-key">Category</div>
+        <div class="detail-val">{{ ticket[3] }}</div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-key">Impact</div>
+        <div class="detail-val">
+          {% set imp = ticket[4]|lower %}
+          {% if imp == 'high' %}<span class="badge b-high">High</span>
+          {% elif imp == 'medium' %}<span class="badge b-medium">Medium</span>
+          {% else %}<span class="badge b-low">Low</span>{% endif %}
+        </div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-key">Urgency</div>
+        <div class="detail-val">
+          {% set urg = ticket[5]|lower %}
+          {% if urg == 'high' %}<span class="badge b-high">High</span>
+          {% elif urg == 'medium' %}<span class="badge b-medium">Medium</span>
+          {% else %}<span class="badge b-low">Low</span>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-grid detail-row-2">
+      <div class="detail-cell">
+        <div class="detail-key">Priority</div>
+        <div class="detail-val">
+          {% if ticket[6] == 'P1' %}<span class="badge b-p1">P1</span>
+          {% elif ticket[6] == 'P2' %}<span class="badge b-p2">P2</span>
+          {% else %}<span class="badge b-p3">P3</span>{% endif %}
+        </div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-key">Routed to</div>
+        <div class="detail-val">{{ ticket[7] }}</div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-key">Filed</div>
+        <div class="detail-val" style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink2);">
+          {% if ticket[8] %}{{ ticket[8].strftime('%b %d, %Y · %H:%M') }}{% else %}—{% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="actions">
+    <a href="/dashboard" class="btn btn-dark">← Back to dashboard</a>
+    <a href="/" class="btn btn-ghost">New ticket</a>
+  </div>
+
+{% else %}
+
+  <div class="not-found">
+    <p class="not-found-title">Ticket not found</p>
+    <p class="not-found-sub">This ticket doesn't exist or may have been removed.</p>
+    <a href="/dashboard" class="btn btn-dark">Back to dashboard</a>
+  </div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

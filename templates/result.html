@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ticket filed — Ticket Desk</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#111110;--ink2:#52524E;--ink3:#A8A8A2;
+  --rule:#E8E8E4;--bg:#F9F9F7;--white:#FFFFFF;
+  --blue:#2563EB;
+  --p1:#DC2626;--p1b:#FEF2F2;--p1r:#FECACA;
+  --p2:#CA8A04;--p2b:#FEFCE8;--p2r:#FDE68A;
+  --p3:#16A34A;--p3b:#F0FDF4;--p3r:#BBF7D0;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-rule:#BBF7D0;
+  --radius:8px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+
+.nav{background:var(--white);border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;position:sticky;top:0;z-index:50;}
+.nav-brand{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--ink);letter-spacing:-.01em;text-decoration:none;}
+.nav-brand em{color:var(--ink3);font-style:normal;}
+.nav-links{display:flex;gap:4px;}
+.nav-a{padding:5px 12px;border-radius:6px;font-size:13px;color:var(--ink2);text-decoration:none;transition:background .12s,color .12s;}
+.nav-a:hover{background:var(--bg);color:var(--ink);}
+
+.shell{max-width:600px;margin:0 auto;padding:48px 24px 80px;}
+
+/* ── FILED BANNER ── */
+.filed{display:flex;align-items:flex-start;gap:12px;background:var(--green-bg);border:1px solid var(--green-rule);border-radius:10px;padding:14px 16px;margin-bottom:24px;}
+.filed-icon{width:32px;height:32px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.filed-icon svg{color:#fff;}
+.filed-title{font-size:14px;font-weight:600;color:#14532D;margin-bottom:2px;}
+.filed-sub{font-size:12px;color:#166534;}
+
+/* ── CARDS ── */
+.card{background:var(--white);border:1px solid var(--rule);border-radius:12px;overflow:hidden;margin-bottom:12px;}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--rule);background:var(--bg);}
+.card-head-label{font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;}
+.card-head-right{font-size:11px;color:var(--ink3);}
+.card-body{padding:14px 16px;}
+
+.ticket-quote{font-size:14px;color:var(--ink2);line-height:1.7;font-style:italic;}
+.summary-text{font-size:15px;font-weight:500;color:var(--ink);line-height:1.5;letter-spacing:-.012em;}
+
+/* ── META GRID (5 cells: category, impact, urgency, priority, team) ── */
+.meta-grid{display:grid;grid-template-columns:repeat(5,1fr);}
+.meta-cell{padding:14px 16px;}
+.meta-cell+.meta-cell{border-left:1px solid var(--rule);}
+.meta-key{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:6px;}
+.meta-val{font-size:13px;font-weight:500;color:var(--ink);}
+
+/* ── BADGES ── */
+.badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;border:1px solid;}
+.b-p1{background:var(--p1b);color:var(--p1);border-color:var(--p1r);}
+.b-p2{background:var(--p2b);color:var(--p2);border-color:var(--p2r);}
+.b-p3{background:var(--p3b);color:var(--p3);border-color:var(--p3r);}
+.b-high{background:#FEF2F2;color:#B91C1C;border-color:#FECACA;}
+.b-medium{background:#FFFBEB;color:#92400E;border-color:#FDE68A;}
+.b-low{background:#F0FDF4;color:#166534;border-color:#BBF7D0;}
+
+/* ── ACTIONS ── */
+.actions{display:flex;gap:8px;margin-top:20px;}
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:var(--radius);padding:9px 16px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:opacity .15s,border-color .15s;}
+.btn-dark{background:var(--ink);color:#fff;border:1px solid var(--ink);}
+.btn-dark:hover{opacity:.8;}
+.btn-ghost{background:var(--white);color:var(--ink2);border:1px solid var(--rule);}
+.btn-ghost:hover{border-color:var(--ink3);color:var(--ink);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-brand">ticket<em>desk</em></a>
+  <div class="nav-links">
+    <a href="/" class="nav-a">New ticket</a>
+    <a href="/dashboard" class="nav-a">Dashboard</a>
+  </div>
+</nav>
+
+<div class="shell">
+
+  <div class="filed">
+    <div class="filed-icon">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div>
+      <div class="filed-title">Ticket filed and routed to {{ result['team'] }}</div>
+      <div class="filed-sub">AI analysis complete — summary, priority, and team assigned below.</div>
+    </div>
+  </div>
+
+  <!-- Original message -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-head-label">Your message</span>
+    </div>
+    <div class="card-body">
+      <p class="ticket-quote">{{ ticket }}</p>
+    </div>
+  </div>
+
+  <!-- AI Summary -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-head-label">AI summary</span>
+      <span class="card-head-right">Claude · just now</span>
+    </div>
+    <div class="card-body">
+      <p class="summary-text">{{ result['summary'] }}</p>
+    </div>
+  </div>
+
+  <!-- Classification: category / impact / urgency / priority / team -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-head-label">Classification</span>
+    </div>
+    <div class="meta-grid">
+
+      <div class="meta-cell">
+        <div class="meta-key">Category</div>
+        <div class="meta-val">{{ result['category'] }}</div>
+      </div>
+
+      <div class="meta-cell">
+        <div class="meta-key">Impact</div>
+        <div class="meta-val">
+          {% set imp = result['impact']|lower %}
+          {% if imp == 'high' %}<span class="badge b-high">High</span>
+          {% elif imp == 'medium' %}<span class="badge b-medium">Medium</span>
+          {% else %}<span class="badge b-low">Low</span>{% endif %}
+        </div>
+      </div>
+
+      <div class="meta-cell">
+        <div class="meta-key">Urgency</div>
+        <div class="meta-val">
+          {% set urg = result['urgency']|lower %}
+          {% if urg == 'high' %}<span class="badge b-high">High</span>
+          {% elif urg == 'medium' %}<span class="badge b-medium">Medium</span>
+          {% else %}<span class="badge b-low">Low</span>{% endif %}
+        </div>
+      </div>
+
+      <div class="meta-cell">
+        <div class="meta-key">Priority</div>
+        <div class="meta-val">
+          {% if result['priority'] == 'P1' %}<span class="badge b-p1">P1</span>
+          {% elif result['priority'] == 'P2' %}<span class="badge b-p2">P2</span>
+          {% else %}<span class="badge b-p3">P3</span>{% endif %}
+        </div>
+      </div>
+
+      <div class="meta-cell">
+        <div class="meta-key">Team</div>
+        <div class="meta-val">{{ result['team'] }}</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="actions">
+    <a href="/" class="btn btn-dark">Submit another</a>
+    <a href="/dashboard" class="btn btn-ghost">View dashboard</a>
+  </div>
+
+</div>
+
+</body>
+</html>
