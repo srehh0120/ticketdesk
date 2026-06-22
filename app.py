@@ -1,8 +1,9 @@
-from flask import Flask,render_template,request
+from flask import Flask,render_template,request,url_for,redirect
 from ai_utils import analyze_ticket
 from database import mysql
 from config import Config
 from databasesetup import setup_database
+from MySQLdb.cursors import DictCursor
 setup_database()
 app=Flask(__name__)
 app.config['MYSQL_HOST']=Config.MYSQL_HOST
@@ -14,19 +15,19 @@ def save_ticket(ticket,result):
     print("SAVE FUNCTION CALLED")
     cur=mysql.connection.cursor()
     cur.execute("""
-        INSERT into tickets(ticket_text,summary,category,impact,urgency,priority,team) VALUES (%s,%s,%s,%s,%s,%s,%s)""",
-                (ticket,result['summary'],result['category'],result['impact'],result['urgency'],result['priority'],result['team']
+        INSERT into tickets(ticket_text,summary,resolution,category,impact,urgency,priority,team) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
+                (ticket,result['summary'],result['resolution'],result['category'],result['impact'],result['urgency'],result['priority'],result['team']
         ))
     mysql.connection.commit()
     cur.close()
 def get_all_tickets():
-    cur=mysql.connection.cursor()
+    cur=mysql.connection.cursor(DictCursor)
     cur.execute("""SELECT * from tickets ORDER BY created_at DESC """)
     tickets=cur.fetchall()
     cur.close()
     return tickets
 def get_ticket_by_id(id):
-    cur=mysql.connection.cursor()
+    cur=mysql.connection.cursor(DictCursor)
     cur.execute("""SELECT * from tickets where id = %s """,(id,))
     ticket=cur.fetchone()
     cur.close()
@@ -43,12 +44,38 @@ def analyze():
 @app.route('/dashboard')
 def dashboard():
     tickets=get_all_tickets()
-    return render_template('dashboard.html',tickets=tickets)
+    open_count=sum(1 for t in tickets if t['status']=='Open')
+    cur = mysql.connection.cursor()
+
+    cur.execute("""
+        SELECT DISTINCT team
+        FROM tickets
+        ORDER BY team
+    """)
+
+    teams = [row[0] for row in cur.fetchall()]
+
+    cur.close()
+    return render_template('dashboard.html',tickets=tickets,open_count=open_count,teams=teams)
 @app.route('/ticket/<int:ticket_id>')
 def ticket_details(ticket_id):
     ticket=get_ticket_by_id(ticket_id)
     return render_template('ticket_details.html',ticket=ticket)
-
+@app.route('/update_status/<int:ticket_id>',methods=['POST'])
+def update_status(ticket_id):
+    status=request.form['status']
+    cur=mysql.connection.cursor()
+    cur.execute("""UPDATE tickets SET status=%s WHERE id = %s """,(status,ticket_id))
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('ticket_details',ticket_id=ticket_id))
+@app.route('/team/<team>')
+def team_dashboard(team):
+    cur=mysql.connection.cursor()
+    cur.execute("""Select * from tickets WHERE team =%s ORDER BY created_at DESC""",(team,))
+    tickets=cur.fetchall()
+    cur.close()
+    return render_template('team_dashboard.html',tickets=tickets,team=team)
 
 if __name__=='__main__':
     app.run(debug=True)

@@ -42,7 +42,8 @@ Do not add explanations.
     "category":"",
     "team":""
     "impact":"",
-    "urgency":""
+    "urgency":"",
+    "resolution":""
 }}
 Determine Impact:
 
@@ -72,9 +73,16 @@ Determine Urgency:
     - Should be fixed soon
 
     LOW:
-    - Can wait
+   - Can wait
     - Minimal business impact
 
+Provide a short suggested resolution.
+
+Requirements:
+- Maximum 4 steps
+- Practical IT troubleshooting steps
+- Plain English
+- Return as a single string
 Category can be:
 - Software Issue
 - Hardware Issue

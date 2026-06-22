@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ticket #{{ ticket[0] }} — Ticket Desk</title>
+<title>Ticket #{{ ticket['id'] }} — Ticket Desk</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -108,20 +108,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
   <div class="bc">
     <a href="/dashboard">Dashboard</a>
     <span class="bc-sep">/</span>
-    <span class="bc-cur">Ticket #{{ ticket[0] }}</span>
+    <span class="bc-cur">Ticket #{{ ticket['id'] }}</span>
   </div>
 
   <div class="ticket-header">
     <div style="flex:1;min-width:0;">
       <div class="ticket-id-row">
-        <span class="ticket-id">#{{ ticket[0] }}</span>
-        <span class="badge b-cat">{{ ticket[3] }}</span>
+        <span class="ticket-id">#{{ ticket['id'] }}</span>
+        <span class="badge b-cat">{{ ticket['category'] }}</span>
       </div>
-      <h1 class="ticket-title">{{ ticket[2] }}</h1>
+      <h1 class="ticket-title">{{ ticket['summary'] }}</h1>
     </div>
     <div class="pri-pill">
-      {% if ticket[6] == 'P1' %}<span class="badge b-p1">P1 Critical</span>
-      {% elif ticket[6] == 'P2' %}<span class="badge b-p2">P2 Medium</span>
+      {% if ticket['priority'] == 'P1' %}<span class="badge b-p1">P1 Critical</span>
+      {% elif ticket['priority'] == 'P2' %}<span class="badge b-p2">P2 Medium</span>
       {% else %}<span class="badge b-p3">P3 Low</span>{% endif %}
     </div>
   </div>
@@ -132,7 +132,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
       <span class="card-head-label">Original message</span>
     </div>
     <div class="card-body">
-      <p class="ticket-body">{{ ticket[1] }}</p>
+      <p class="ticket-body">{{ ticket['ticket_text'] }}</p>
     </div>
   </div>
 
@@ -143,9 +143,21 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
       <span class="card-head-right">Claude</span>
     </div>
     <div class="card-body">
-      <p class="summary-body">{{ ticket[2] }}</p>
+      <p class="summary-body">{{ ticket['summary'] }}</p>
     </div>
   </div>
+
+<div class="card">
+    <div class="card-head">
+        <span class="card-head-label">Suggested Resolution</span>
+    </div>
+
+    <div class="card-body">
+        <p class="summary-body">
+            {{ ticket['resolution'] }}
+        </p>
+    </div>
+</div>
 
   <!-- Full classification -->
   <div class="card">
@@ -156,12 +168,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
     <div class="detail-grid">
       <div class="detail-cell">
         <div class="detail-key">Category</div>
-        <div class="detail-val">{{ ticket[3] }}</div>
+        <div class="detail-val">{{ ticket['category']}}</div>
       </div>
       <div class="detail-cell">
         <div class="detail-key">Impact</div>
         <div class="detail-val">
-          {% set imp = ticket[4]|lower %}
+          {% set imp = ticket['impact']|lower %}
           {% if imp == 'high' %}<span class="badge b-high">High</span>
           {% elif imp == 'medium' %}<span class="badge b-medium">Medium</span>
           {% else %}<span class="badge b-low">Low</span>{% endif %}
@@ -170,7 +182,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
       <div class="detail-cell">
         <div class="detail-key">Urgency</div>
         <div class="detail-val">
-          {% set urg = ticket[5]|lower %}
+          {% set urg = ticket['urgency']|lower %}
           {% if urg == 'high' %}<span class="badge b-high">High</span>
           {% elif urg == 'medium' %}<span class="badge b-medium">Medium</span>
           {% else %}<span class="badge b-low">Low</span>{% endif %}
@@ -182,24 +194,71 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
       <div class="detail-cell">
         <div class="detail-key">Priority</div>
         <div class="detail-val">
-          {% if ticket[6] == 'P1' %}<span class="badge b-p1">P1</span>
-          {% elif ticket[6] == 'P2' %}<span class="badge b-p2">P2</span>
+          {% if ticket['priority'] == 'P1' %}<span class="badge b-p1">P1</span>
+          {% elif ticket['priority'] == 'P2' %}<span class="badge b-p2">P2</span>
           {% else %}<span class="badge b-p3">P3</span>{% endif %}
         </div>
       </div>
       <div class="detail-cell">
         <div class="detail-key">Routed to</div>
-        <div class="detail-val">{{ ticket[7] }}</div>
+        <div class="detail-val">{{ ticket['team'] }}</div>
       </div>
       <div class="detail-cell">
         <div class="detail-key">Filed</div>
         <div class="detail-val" style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink2);">
-          {% if ticket[8] %}{{ ticket[8].strftime('%b %d, %Y · %H:%M') }}{% else %}—{% endif %}
+          {% if ticket['created_at'] %}{{ ticket['created_at'].strftime('%b %d, %Y · %H:%M') }}{% else %}—{% endif %}
         </div>
       </div>
     </div>
 
   </div>
+  <div class="card">
+
+    <div class="card-head">
+        <span class="card-head-label">
+            Ticket Status
+        </span>
+    </div>
+
+    <div class="card-body">
+
+        <form
+            action="/update_status/{{ ticket['id'] }}"
+            method="POST">
+
+            <select name="status">
+
+                <option value="Open"
+                    {% if ticket['status']=="Open" %}selected{% endif %}>
+                    Open
+                </option>
+
+                <option value="In Progress"
+                    {% if ticket['status']=="In Progress" %}selected{% endif %}>
+                    In Progress
+                </option>
+
+                <option value="Resolved"
+                    {% if ticket['status']=="Resolved" %}selected{% endif %}>
+                    Resolved
+                </option>
+
+                <option value="Closed"
+                    {% if ticket['status']=="Closed" %}selected{% endif %}>
+                    Closed
+                </option>
+
+            </select>
+
+            <button type="submit">
+                Update Status
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 
   <div class="actions">
     <a href="/dashboard" class="btn btn-dark">← Back to dashboard</a>

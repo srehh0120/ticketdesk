@@ -106,13 +106,33 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
   <div class="card">
     <div class="card-head">
       <span class="card-head-label">AI summary</span>
-      <span class="card-head-right">Claude · just now</span>
     </div>
+
     <div class="card-body">
       <p class="summary-text">{{ result['summary'] }}</p>
     </div>
-  </div>
+</div>
 
+<!-- Resolution -->
+<div class="card">
+
+    <div class="card-head">
+        <span class="card-head-label">
+            Suggested Resolution
+        </span>
+
+        <span class="card-head-right">
+            Groq Llama 3.3
+        </span>
+    </div>
+
+    <div class="card-body">
+        <p class="summary-text">
+            {{ result['resolution'] }}
+        </p>
+    </div>
+
+</div>
   <!-- Classification: category / impact / urgency / priority / team -->
   <div class="card">
     <div class="card-head">
@@ -148,9 +168,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
       <div class="meta-cell">
         <div class="meta-key">Priority</div>
         <div class="meta-val">
-          {% if result['priority'] == 'P1' %}<span class="badge b-p1">P1</span>
-          {% elif result['priority'] == 'P2' %}<span class="badge b-p2">P2</span>
-          {% else %}<span class="badge b-p3">P3</span>{% endif %}
+          {% if result['priority'] == 'P1' %}
+    <span class="badge b-p1">P1</span>
+
+{% elif result['priority'] == 'P2' %}
+    <span class="badge b-p2">P2</span>
+
+{% elif result['priority'] == 'P3' %}
+    <span class="badge b-p3">P3</span>
+
+{% else %}
+    <span class="badge b-low">P4</span>
+
+{% endif %}
         </div>
       </div>
 

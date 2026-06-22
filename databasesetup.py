@@ -14,6 +14,7 @@ def setup_database():
             id INT AUTO_INCREMENT PRIMARY KEY,
             ticket_text TEXT NOT NULL,
             summary TEXT,
+            resolution TEXT,
             category VARCHAR(100),
             impact VARCHAR(20),
             urgency VARCHAR(20),
