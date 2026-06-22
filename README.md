@@ -4,6 +4,20 @@ TicketDesk is an AI-powered helpdesk ticket management system built using Flask,
 
 ## Features
 
+- AI-powered ticket classification
+- Automatic priority assignment (P1–P4)
+- Impact and urgency analysis
+- Intelligent team routing
+- Ticket lifecycle management
+  - Open
+  - In Progress
+  - Resolved
+  - Closed
+- Team-specific dashboards
+- Ticket history and details view
+- MySQL database integration
+- Flask-based web application
+
 ### AI Ticket Analysis
 
 * Automatic ticket summarization
