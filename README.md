@@ -3,7 +3,6 @@
 TicketDesk is an AI-powered helpdesk ticket management system built using Flask, MySQL, and Groq LLMs. The application automates the initial ticket triage process by analyzing support requests, generating summaries, classifying issues, determining impact and urgency, assigning priorities, and routing tickets to the appropriate support team.
 
 ## Features
-
 - AI-powered ticket classification
 - Automatic priority assignment (P1–P4)
 - Impact and urgency analysis
@@ -17,6 +16,7 @@ TicketDesk is an AI-powered helpdesk ticket management system built using Flask,
 - Ticket history and details view
 - MySQL database integration
 - Flask-based web application
+
 
 ### AI Ticket Analysis
 
