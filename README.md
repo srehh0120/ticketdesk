@@ -66,7 +66,12 @@ Each ticket contains:
 ---
 <img width="1888" height="868" alt="image" src="https://github.com/user-attachments/assets/096a5a4d-c85a-4b9a-be91-8f516182ecdd" />
 <img width="1905" height="868" alt="image" src="https://github.com/user-attachments/assets/5f265d79-19cb-48c8-9fbd-dfa54cfd3eb7" />
-<img width="1892" height="862" alt="image" src="https://github.com/user-attachments/assets/cc905c44-febe-439d-8d6f-e520529617f4" />
+<img width="1898" height="867" alt="image" src="https://github.com/user-attachments/assets/2bc8daed-0162-41e5-929d-ecb58c7299da" />
+<img width="1892" height="857" alt="image" src="https://github.com/user-attachments/assets/7402d4c1-1bee-4991-9df9-4ee0db64fc84" />
+<img width="1877" height="877" alt="image" src="https://github.com/user-attachments/assets/b3675c74-e7dd-4f1e-b5fb-cc261baa1288" />
+<img width="1902" height="856" alt="image" src="https://github.com/user-attachments/assets/fe4940a3-ab95-48ff-a1a0-7fb5a701c5cb" />
+
+
 
 
 ## Tech Stack
