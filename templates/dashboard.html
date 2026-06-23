@@ -13,10 +13,12 @@
   --p1:#DC2626;--p1b:#FEF2F2;--p1r:#FECACA;
   --p2:#CA8A04;--p2b:#FEFCE8;--p2r:#FDE68A;
   --p3:#16A34A;--p3b:#F0FDF4;--p3r:#BBF7D0;
+  --blue:#2563EB;--blueb:#EFF6FF;--bluer:#BFDBFE;
   --radius:8px;
 }
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;}
 
+/* ── NAV ── */
 .nav{background:var(--white);border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;position:sticky;top:0;z-index:50;}
 .nav-brand{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--ink);letter-spacing:-.01em;text-decoration:none;}
 .nav-brand em{color:var(--ink3);font-style:normal;}
@@ -36,58 +38,92 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
 
 
 /* ── STATS ── */
-.stats{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-gap:10px;
-margin-bottom:20px;
-}
-.stat{background:var(--white);border:1px solid var(--rule);border-radius:10px;padding:16px 18px;}
-.stat-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:8px;}
-.stat-value{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:500;color:var(--ink);line-height:1;}
-.stat-value.red{color:var(--p1);}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px;}
+.stat{background:var(--white);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;}
+.stat-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:7px;}
+.stat-value{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:500;line-height:1;}
+.c-default{color:var(--ink);}
+.c-blue{color:var(--blue);}
+.c-red{color:var(--p1);}
+.c-amber{color:var(--p2);}
+.c-green{color:var(--p3);}
+
+/* ── SECTION HEADER ── */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;margin-top:28px;}
+.section-title{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-.01em;}
+.section-sub{font-size:12px;color:var(--ink3);}
+
+/* ── TEAM CARDS ── */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:8px;}
+.team-card{background:var(--white);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;text-decoration:none;display:block;transition:border-color .15s,box-shadow .15s;cursor:pointer;}
+.team-card:hover{border-color:var(--ink3);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.team-card-name{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.team-card-meta{display:flex;align-items:baseline;justify-content:space-between;gap:8px;}
+.team-card-count{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;color:var(--ink);line-height:1;}
+.team-card-label{font-size:11px;color:var(--ink3);}
+.team-bar-track{height:3px;background:var(--rule);border-radius:99px;margin-top:12px;overflow:hidden;}
+.team-bar-fill{height:100%;border-radius:99px;background:var(--ink);transition:width .4s ease;}
 
 /* ── TABLE CARD ── */
 .tcard{background:var(--white);border:1px solid var(--rule);border-radius:12px;overflow:hidden;}
-.tcard-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--rule);}
+.tcard-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--rule);gap:12px;flex-wrap:wrap;}
 .tcard-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);}
 
 /* filter tabs */
-.filter-tabs{display:flex;gap:2px;}
-.ftab{padding:4px 10px;border-radius:5px;font-size:12px;color:var(--ink3);cursor:pointer;transition:background .12s,color .12s;border:none;background:transparent;font-family:'Inter',sans-serif;}
+.filter-row{display:flex;gap:2px;flex-wrap:wrap;}
+.ftab{padding:4px 10px;border-radius:5px;font-size:12px;color:var(--ink3);cursor:pointer;border:none;background:transparent;font-family:'Inter',sans-serif;transition:background .12s,color .12s;}
 .ftab:hover{background:var(--bg);color:var(--ink2);}
 .ftab.active{background:var(--bg);color:var(--ink);font-weight:500;}
+
+/* search */
+.search-wrap{position:relative;}
+.search-input{height:30px;border:1px solid var(--rule);border-radius:6px;padding:0 10px 0 28px;font-family:'Inter',sans-serif;font-size:12px;color:var(--ink);background:var(--bg);outline:none;width:180px;transition:border-color .15s;}
+.search-input:focus{border-color:var(--ink3);}
+.search-input::placeholder{color:var(--ink3);}
+.search-icon{position:absolute;left:8px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--ink3);}
 
 table{width:100%;border-collapse:collapse;}
 th{padding:9px 14px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);text-align:left;background:#FAFAF8;border-bottom:1px solid var(--rule);white-space:nowrap;}
 td{padding:11px 14px;font-size:13px;color:var(--ink);border-top:1px solid var(--rule);vertical-align:middle;}
-tr.data-row:first-child td{border-top:none;}
-tr.data-row{cursor:pointer;transition:background .1s;}
-tr.data-row:hover td{background:#FAFAF8;}
+tr.dr:first-child td{border-top:none;}
+tr.dr{cursor:pointer;transition:background .1s;}
+tr.dr:hover td{background:#FAFAF8;}
+tr.dr.hidden{display:none;}
 
 .td-id{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink3);white-space:nowrap;}
-.td-text{max-width:200px;}
-.td-text-inner{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink2);font-size:12px;}
-.td-summary{max-width:240px;}
-.td-summary-inner{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.td-team{white-space:nowrap;color:var(--ink2);font-size:12px;}
+.clamp{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.w-text{max-width:160px;}
+.w-summary{max-width:200px;}
+.td-muted{color:var(--ink2);font-size:12px;}
 .td-date{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink3);white-space:nowrap;}
+.td-team-link{font-size:12px;color:var(--ink2);text-decoration:none;}
+.td-team-link:hover{color:var(--blue);text-decoration:underline;}
 
+/* ── BADGES ── */
 .badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;border:1px solid;white-space:nowrap;}
 .b-p1{background:var(--p1b);color:var(--p1);border-color:var(--p1r);}
 .b-p2{background:var(--p2b);color:var(--p2);border-color:var(--p2r);}
 .b-p3{background:var(--p3b);color:var(--p3);border-color:var(--p3r);}
-.b-cat{background:var(--bg);color:var(--ink2);border-color:var(--rule);font-family:'Inter',sans-serif;font-size:11px;}
+.b-cat{background:var(--bg);color:var(--ink2);border-color:var(--rule);font-family:'Inter',sans-serif;}
 .b-high{background:#FEF2F2;color:#B91C1C;border-color:#FECACA;}
 .b-medium{background:#FEFCE8;color:#92400E;border-color:#FDE68A;}
 .b-low{background:#F0FDF4;color:#166534;border-color:#BBF7D0;}
+.b-open{background:var(--blueb);color:#1D4ED8;border-color:var(--bluer);font-family:'Inter',sans-serif;}
+.b-inprogress{background:var(--p2b);color:#92400E;border-color:var(--p2r);font-family:'Inter',sans-serif;}
+.b-resolved{background:var(--p3b);color:#166534;border-color:var(--p3r);font-family:'Inter',sans-serif;}
+.b-closed{background:var(--bg);color:var(--ink3);border-color:var(--rule);font-family:'Inter',sans-serif;}
 
+/* ── EMPTY ── */
 .empty{padding:56px 24px;text-align:center;}
 .empty-msg{font-size:14px;color:var(--ink3);margin-bottom:12px;}
 .empty-link{font-size:13px;color:var(--ink);font-weight:500;text-decoration:none;border-bottom:1px solid var(--rule);}
 .empty-link:hover{border-color:var(--ink2);}
 
-@media(max-width:700px){.stats{grid-template-columns:1fr 1fr;}.td-text,.td-team{display:none;}}
+@media(max-width:720px){
+  .stats{grid-template-columns:1fr 1fr;}
+  .w-text{display:none;}
+  .search-input{width:120px;}
+}
 </style>
 </head>
 <body>
@@ -100,17 +136,7 @@ tr.data-row:hover td{background:#FAFAF8;}
     <a href="/" class="btn-new">+ New</a>
   </div>
 </nav>
-<div class="team-links">
 
-{% for team in teams %}
-
-    <a href="/team/{{ team }}">
-        {{ team }}
-    </a>
-
-{% endfor %}
-
-</div>
 <div class="shell">
 
   <div class="ph">
@@ -118,88 +144,90 @@ tr.data-row:hover td{background:#FAFAF8;}
     <span class="ph-count">{{ tickets|length }} ticket{{ 's' if tickets|length != 1 else '' }}</span>
   </div>
 
-  {# ── Jinja2 stat computation ── #}
+  {# ── stat computation (DictCursor — use key names) ── #}
   {% set total = tickets|length %}
-  {% set ns = namespace(p1=0,p2=0,p3=0) %}
-  {% set total = tickets|length %}
-{% set ns = namespace(p1=0,p2=0,p3=0,p4=0) %}
+  {% set ns = namespace(p1=0, p2=0, p3=0, resolved=0) %}
+  {% for t in tickets %}
+    {% if t['priority'] == 'P1' %}{% set ns.p1 = ns.p1 + 1 %}
+    {% elif t['priority'] == 'P2' %}{% set ns.p2 = ns.p2 + 1 %}
+    {% else %}{% set ns.p3 = ns.p3 + 1 %}{% endif %}
+    {% if t['status'] in ['Resolved','Closed'] %}{% set ns.resolved = ns.resolved + 1 %}{% endif %}
+  {% endfor %}
+  {% set max_team = team_counts.values()|max if team_counts else 1 %}
 
-{% for t in tickets %}
-
-    {% if t['priority'] == 'P1' %}
-        {% set ns.p1 = ns.p1 + 1 %}
-
-    {% elif t['priority'] == 'P2' %}
-        {% set ns.p2 = ns.p2 + 1 %}
-
-    {% elif t['priority'] == 'P3' %}
-        {% set ns.p3 = ns.p3 + 1 %}
-
-    {% else %}
-        {% set ns.p4 = ns.p4 + 1 %}
-
-    {% endif %}
-
-{% endfor %}
-  {# tuple: (id, ticket_text, summary, category, impact, urgency, priority, team, created_at) #}
-
-<div class="stats">
-
+  <!-- ── STAT CARDS ── -->
+  <div class="stats">
     <div class="stat">
-        <div class="stat-label">Total</div>
-        <div class="stat-value">{{ total }}</div>
+      <div class="stat-label">Total</div>
+      <div class="stat-value c-default">{{ total }}</div>
     </div>
-
     <div class="stat">
-        <div class="stat-label">P1 Critical</div>
-        <div class="stat-value red">
-            {{ ns.p1 }}
-        </div>
+      <div class="stat-label">Open</div>
+      <div class="stat-value c-blue">{{ open_count }}</div>
     </div>
-
     <div class="stat">
-        <div class="stat-label">P2 High</div>
-        <div class="stat-value" style="color:var(--p2)">
-            {{ ns.p2 }}
-        </div>
+      <div class="stat-label">P1 Critical</div>
+      <div class="stat-value c-red">{{ ns.p1 }}</div>
     </div>
-
     <div class="stat">
-        <div class="stat-label">P3 Medium</div>
-        <div class="stat-value" style="color:var(--p3)">
-            {{ ns.p3 }}
-        </div>
+      <div class="stat-label">P2 Medium</div>
+      <div class="stat-value c-amber">{{ ns.p2 }}</div>
     </div>
-<div class="stat">
-    <div class="stat-label">P4 Low</div>
-    <div class="stat-value" style="color:var(--ink3)">
-        {{ ns.p4 }}
+    <div class="stat">
+      <div class="stat-label">Resolved</div>
+      <div class="stat-value c-green">{{ ns.resolved }}</div>
     </div>
-</div>
+  </div>
 
-<div class="stat">
-    <div class="stat-label">Open Tickets</div>
-    <div class="stat-value">
-        {{ open_count }}
-    </div>
-</div>
-</div>
-    
-         
+  <!-- ── TEAM SECTION ── -->
+  {% if teams %}
+  <div class="section-head">
+    <span class="section-title">Teams</span>
+    <span class="section-sub">Click a team to view its tickets</span>
+  </div>
+  <div class="team-grid">
+    {% for team in teams %}
+    {% set count = team_counts.get(team, 0) %}
+    {% set pct = ((count / max_team) * 100)|int %}
+    <a href="/team/{{ team }}" class="team-card">
+      <div class="team-card-name">{{ team }}</div>
+      <div class="team-card-meta">
+        <span class="team-card-count">{{ count }}</span>
+        <span class="team-card-label">ticket{{ 's' if count != 1 else '' }}</span>
+      </div>
+      <div class="team-bar-track">
+        <div class="team-bar-fill" style="width:{{ pct }}%"></div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ── ALL TICKETS TABLE ── -->
+  <div class="section-head">
+    <span class="section-title">All tickets</span>
+  </div>
+
   <div class="tcard">
     <div class="tcard-head">
-      <span class="tcard-label">All tickets</span>
-      <div class="filter-tabs">
-        <button class="ftab active" onclick="filterAll(this)">All</button>
-        <button class="ftab" onclick="filterBy('P1',this)">P1</button>
-        <button class="ftab" onclick="filterBy('P2',this)">P2</button>
-        <button class="ftab" onclick="filterBy('P3',this)">P3</button>
+      <div class="filter-row">
+        <button class="ftab active" onclick="applyFilter('all',this)">All</button>
+        <button class="ftab" onclick="applyFilter('Open',this)">Open</button>
+        <button class="ftab" onclick="applyFilter('In Progress',this)">In Progress</button>
+        <button class="ftab" onclick="applyFilter('Resolved',this)">Resolved</button>
+        <button class="ftab" onclick="applyFilter('P1',this)">P1</button>
+        <button class="ftab" onclick="applyFilter('P2',this)">P2</button>
+        <button class="ftab" onclick="applyFilter('P3',this)">P3</button>
+      </div>
+      <div class="search-wrap">
+        <svg class="search-icon" width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <input class="search-input" type="text" id="search" placeholder="Search tickets…" oninput="doSearch(this.value)">
       </div>
     </div>
 
     {% if tickets %}
     <div style="overflow-x:auto;">
-      <table id="tickets-table">
+      <table>
         <thead>
           <tr>
             <th>ID</th>
@@ -214,61 +242,66 @@ tr.data-row:hover td{background:#FAFAF8;}
             <th>Date</th>
           </tr>
         </thead>
-        <tbody>
-          {# tuple: (id, ticket_text, summary, category, impact, urgency, priority, team, created_at) #}
+        <tbody id="tbody">
           {% for t in tickets %}
-          <tr class="data-row" data-priority="{{ t['priority'] }}" onclick="window.location='/ticket/{{ t.id }}'">
-            <td class="td-id">#{{ t['id'] }}</td>
-            <td class="td-text"><div class="td-text-inner" title="{{ t['ticket_text'] }}">{{ t['ticket_text'] }}</div></td>
-            <td class="td-summary"><div class="td-summary-inner" title="{{ t['summary'] }}">{{ t['summary'] }}</div></td>
+          <tr class="dr"
+              data-priority="{{ t['priority'] }}"
+              data-status="{{ t['status'] }}"
+              data-search="{{ (t['ticket_text'] ~ ' ' ~ t['summary'] ~ ' ' ~ t['category'] ~ ' ' ~ t['team'])|lower }}"
+              onclick="window.location='/ticket/{{ t.id }}'">
+
+            <td class="td-id">#{{ t.id }}</td>
+
+            <td><div class="clamp w-text td-muted" title="{{ t['ticket_text'] }}">{{ t['ticket_text'] }}</div></td>
+
+            <td><div class="clamp w-summary" title="{{ t['summary'] }}">{{ t['summary'] }}</div></td>
+
             <td><span class="badge b-cat">{{ t['category'] }}</span></td>
+
             <td>
-              {% set imp = t['impact']|lower %}
-              {% if imp == 'high' %}<span class="badge b-high">High</span>
-              {% elif imp == 'medium' %}<span class="badge b-medium">Medium</span>
+              {% if t['impact']|lower == 'high' %}<span class="badge b-high">High</span>
+              {% elif t['impact']|lower == 'medium' %}<span class="badge b-medium">Medium</span>
               {% else %}<span class="badge b-low">Low</span>{% endif %}
             </td>
+
             <td>
-              {% set urg = t['urgency']|lower %}
-              {% if urg == 'high' %}<span class="badge b-high">High</span>
-              {% elif urg == 'medium' %}<span class="badge b-medium">Medium</span>
+              {% if t['urgency']|lower == 'high' %}<span class="badge b-high">High</span>
+              {% elif t['urgency']|lower == 'medium' %}<span class="badge b-medium">Medium</span>
               {% else %}<span class="badge b-low">Low</span>{% endif %}
             </td>
+
             <td>
+              {% if t['priority'] == 'P1' %}<span class="badge b-p1">P1</span>
+              {% elif t['priority'] == 'P2' %}<span class="badge b-p2">P2</span>
+              {% else %}<span class="badge b-p3">P3</span>{% endif %}
+            </td>
 
-                {% if t['priority'] == 'P1' %}
-                    <span class="badge b-p1">P1</span>
+            <td>
+              {% set st = t['status'] %}
+              {% if st == 'Open' %}<span class="badge b-open">Open</span>
+              {% elif st == 'In Progress' %}<span class="badge b-inprogress">In Progress</span>
+              {% elif st == 'Resolved' %}<span class="badge b-resolved">Resolved</span>
+              {% else %}<span class="badge b-closed">{{ st }}</span>{% endif %}
+            </td>
 
-                {% elif t['priority'] == 'P2' %}
-                    <span class="badge b-p2">P2</span>
+            <td>
+              <a class="td-team-link" href="/team/{{ t['team'] }}" onclick="event.stopPropagation()">{{ t['team'] }}</a>
+            </td>
 
-                {% elif t['priority'] == 'P3' %}
-                    <span class="badge b-p3">P3</span>
+            <td class="td-date">
+              {% if t['created_at'] %}{{ t['created_at'].strftime('%b %d') }}{% endif %}
+            </td>
 
-                {% else %}
-                    <span class="badge b-cat">P4</span>
-
-                {% endif %}
-
-                </td>
-                <td>
-                    {% if t['status'] == 'Open' %}
-                        <span class="badge b-p1">Open</span>
-                    {% elif t['status'] == 'In Progress' %}
-                        <span class="badge b-p2">In Progress</span>
-                    {% elif t['status'] == 'Resolved' %}
-                        <span class="badge b-p3">Resolved</span>
-                    {% else %}
-                        <span class="badge b-cat">Closed</span>
-                    {% endif %}
-                  </td>
-            <td class="td-team">{{ t['team'] }}</td>
-            <td class="td-date">{% if t['created_at'] %}{{ t['created_at'].strftime('%b %d') }}{% endif %}</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
+
+    <div id="no-results" style="display:none;" class="empty">
+      <p class="empty-msg">No tickets match that filter.</p>
+    </div>
+
     {% else %}
     <div class="empty">
       <p class="empty-msg">No tickets yet.</p>
@@ -280,17 +313,36 @@ tr.data-row:hover td{background:#FAFAF8;}
 </div>
 
 <script>
-function filterBy(pri, btn) {
+let activeFilter = 'all';
+let activeSearch = '';
+
+function applyFilter(val, btn) {
+  activeFilter = val;
   document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.data-row').forEach(r => {
-    r.style.display = r.dataset.priority === pri ? '' : 'none';
-  });
+  render();
 }
-function filterAll(btn) {
-  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.data-row').forEach(r => r.style.display = '');
+
+function doSearch(val) {
+  activeSearch = val.toLowerCase().trim();
+  render();
+}
+
+function render() {
+  let visible = 0;
+  document.querySelectorAll('#tbody .dr').forEach(r => {
+    const matchFilter =
+      activeFilter === 'all' ||
+      r.dataset.priority === activeFilter ||
+      r.dataset.status === activeFilter;
+    const matchSearch =
+      !activeSearch || r.dataset.search.includes(activeSearch);
+    const show = matchFilter && matchSearch;
+    r.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  const noRes = document.getElementById('no-results');
+  if (noRes) noRes.style.display = visible === 0 ? 'block' : 'none';
 }
 </script>
 

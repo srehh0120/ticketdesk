@@ -23,6 +23,21 @@ def calculate_priority(impact, urgency):
         (impact.upper(), urgency.upper()),
         "P4"
     )
+TEAM_MAP = {
+
+    "Software Issue": "IT Operations",
+
+    "Network Issue": "Network Team",
+
+    "Security Issue": "Security Team",
+
+    "Email Issue": "Email Support",
+
+    "Finance Issue": "Finance",
+
+    "HR Issue": "HR"
+
+}
 
 def analyze_ticket(ticket):
 
@@ -40,7 +55,6 @@ Do not add explanations.
 {{
     "summary":"",
     "category":"",
-    "team":""
     "impact":"",
     "urgency":"",
     "resolution":""
@@ -102,13 +116,13 @@ Ticket:
             }
         ]
     )
-
     result= response.choices[0].message.content
     result = json.loads(result)
     print(result)
     impact=result['impact']
     urgency=result['urgency']
     result['priority']=calculate_priority(impact,urgency)
+    result['team']=TEAM_MAP.get(result['category'],'IT Operations')
    #print(result['priority'])
     return result
 

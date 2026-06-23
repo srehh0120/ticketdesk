@@ -45,18 +45,15 @@ def analyze():
 def dashboard():
     tickets=get_all_tickets()
     open_count=sum(1 for t in tickets if t['status']=='Open')
-    cur = mysql.connection.cursor()
-
-    cur.execute("""
-        SELECT DISTINCT team
-        FROM tickets
-        ORDER BY team
-    """)
-
-    teams = [row[0] for row in cur.fetchall()]
-
-    cur.close()
-    return render_template('dashboard.html',tickets=tickets,open_count=open_count,teams=teams)
+    team_counts={}
+    for t in tickets:
+        team=t['team']
+        if team not in team_counts:
+            team_counts[team]=0
+        team_counts[team]+=1
+    print(team_counts)
+    teams = sorted(set(t['team'] for t in tickets))
+    return render_template('dashboard.html',tickets=tickets,open_count=open_count,team_counts=team_counts,teams=teams)
 @app.route('/ticket/<int:ticket_id>')
 def ticket_details(ticket_id):
     ticket=get_ticket_by_id(ticket_id)
@@ -73,9 +70,9 @@ def update_status(ticket_id):
 def team_dashboard(team):
     cur=mysql.connection.cursor()
     cur.execute("""Select * from tickets WHERE team =%s ORDER BY created_at DESC""",(team,))
-    tickets=cur.fetchall()
+    ticket=cur.fetchall()
     cur.close()
-    return render_template('team_dashboard.html',tickets=tickets,team=team)
+    return render_template('team_dashboard.html',ticket=ticket,team=team)
 
 if __name__=='__main__':
     app.run(debug=True)
